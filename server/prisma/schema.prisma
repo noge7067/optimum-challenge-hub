@@ -1,0 +1,289 @@
+// ==========================================================
+// OPTIMUM CHALLENGE HUB – ULTIMATE PRISMA SCHEMA
+// Premium Build · AAA Gaming Features · Zero Compromise
+// ==========================================================
+
+generator client {
+      provider = "prisma-client-js"
+}
+
+datasource db {
+      provider = "postgresql"
+        url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------------
+// USERS
+// Deep profile + XP + level + cosmetics + socials.
+// ----------------------------------------------------------
+model User {
+      id              String         @id @default(cuid())
+        discordId       String         @unique
+          username        String
+            avatar          String?
+              level           Int            @default(1)
+                xp              Int            @default(0)
+                  bio             String?
+                    createdAt       DateTime       @default(now())
+                      updatedAt       DateTime       @updatedAt
+
+                        stats           UserStats?
+                          attempts        ChallengeAttempt[]
+                            badges          UserBadge[]
+                              achievements    UserAchievement[]
+                                inventory       InventoryItem[]
+                                  notifications   Notification[]
+                                    posts           Post[]
+                                      comments        Comment[]
+                                        logins          DailyLogin[]
+                                          referralsSent   Referral[]     @relation("referrer")
+                                            referralsGot    Referral[]     @relation("referee")
+
+                                              deviceSessions  DeviceSession[]
+                                                auditLogs       AuditLog[]
+}
+
+// ----------------------------------------------------------
+// USER STATS
+// ----------------------------------------------------------
+model UserStats {
+      id            String   @id @default(cuid())
+        userId        String   @unique
+          totalPoints   Int      @default(0)
+            totalWins     Int      @default(0)
+              streak        Int      @default(0)
+                lastPlayedAt  DateTime?
+
+                  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ----------------------------------------------------------
+// SEASONS (Seasonal Leaderboards)
+// ----------------------------------------------------------
+model Season {
+      id          String       @id @default(cuid())
+        name        String
+          startDate   DateTime
+            endDate     DateTime
+              active      Boolean       @default(true)
+
+                challenges  Challenge[]
+}
+
+// ----------------------------------------------------------
+// CHALLENGES (Daily + Seasonal)
+// ----------------------------------------------------------
+model Challenge {
+      id            String              @id @default(cuid())
+        seasonId      String?
+          title         String
+            description   String
+              difficulty    Int                  @default(1)
+                rewardPoints  Int                  @default(10)
+                  rewardXP      Int                  @default(5)
+                    rewardItemId  String?
+                      rlncBoost     Boolean              @default(false)
+                        isActive      Boolean              @default(true)
+                          createdAt     DateTime             @default(now())
+
+                            season         Season?             @relation(fields: [seasonId], references: [id])
+                              rewardItem     Item?               @relation(fields: [rewardItemId], references: [id])
+                                attempts       ChallengeAttempt[]
+}
+
+// ----------------------------------------------------------
+// QUESTS – Multi-step, premium missions.
+// ----------------------------------------------------------
+model Quest {
+      id           String      @id @default(cuid())
+        title        String
+          description  String?
+            difficulty   Int          @default(1)
+              xpReward     Int          @default(20)
+                pointsReward Int          @default(50)
+                  createdAt    DateTime     @default(now())
+                    active       Boolean      @default(true)
+
+                      steps        QuestStep[]
+}
+
+// ----------------------------------------------------------
+// QUEST STEPS
+// ----------------------------------------------------------
+model QuestStep {
+      id        String    @id @default(cuid())
+        questId   String
+          text      String
+            order     Int
+
+              quest     Quest     @relation(fields: [questId], references: [id], onDelete: Cascade)
+}
+
+// ----------------------------------------------------------
+// USER ↔ QUEST COMPLETION
+// ----------------------------------------------------------
+model UserQuest {
+      id         String    @id @default(cuid())
+        userId     String
+          questId    String
+            completed  Boolean   @default(false)
+              completedAt DateTime?
+
+                user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+                  quest      Quest     @relation(fields: [questId], references: [id], onDelete: Cascade)
+}
+
+// ----------------------------------------------------------
+// CHALLENGE ATTEMPTS
+// ----------------------------------------------------------
+model ChallengeAttempt {
+      id            String      @id @default(cuid())
+        userId        String
+          challengeId   String
+            score         Int         @default(0)
+              completed     Boolean     @default(false)
+                playedAt      DateTime    @default(now())
+
+                  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+                    challenge     Challenge   @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+}
+
+// ----------------------------------------------------------
+// ITEMS (Inventory, Power-ups, Cosmetics)
+// ----------------------------------------------------------
+model Item {
+      id          String    @id @default(cuid())
+        name        String
+          type        String      // cosmetic | powerup | special
+            icon        String?
+              rarity      String      // Common | Rare | Epic | Legendary
+                description String?
+
+                  inventory   InventoryItem[]
+}
+
+// ----------------------------------------------------------
+// USER INVENTORY
+// ----------------------------------------------------------
+model InventoryItem {
+      id        String     @id @default(cuid())
+        userId    String
+          itemId    String
+            amount    Int        @default(1)
+
+              user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+                item      Item       @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+// ----------------------------------------------------------
+// ACHIEVEMENTS (milestones)
+// ----------------------------------------------------------
+model Achievement {
+      id          String     @id @default(cuid())
+        name        String
+          icon        String?
+            description String
+              requirement String
+                createdAt   DateTime   @default(now())
+
+                  users       UserAchievement[]
+}
+
+model UserAchievement {
+      id            String       @id @default(cuid())
+        userId        String
+          achievementId String
+            earnedAt      DateTime     @default(now())
+
+              user          User         @relation(fields: [userId], references: [id])
+                achievement   Achievement  @relation(fields: [achievementId], references: [id])
+}
+
+// ----------------------------------------------------------
+// DAILY LOGIN STREAKS
+// ----------------------------------------------------------
+model DailyLogin {
+      id        String     @id @default(cuid())
+        userId    String
+          date      DateTime   @default(now())
+
+            user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+              @@unique([userId, date])
+}
+
+// ----------------------------------------------------------
+// SOCIAL FEED
+// ----------------------------------------------------------
+model Post {
+      id        String      @id @default(cuid())
+        userId    String
+          content   String
+            createdAt DateTime    @default(now())
+
+              user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+                comments  Comment[]
+}
+
+model Comment {
+      id        String      @id @default(cuid())
+        postId    String
+          userId    String
+            content   String
+              createdAt DateTime    @default(now())
+
+                post      Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
+                  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ----------------------------------------------------------
+// REFERRALS SYSTEM
+// ----------------------------------------------------------
+model Referral {
+      id         String   @id @default(cuid())
+        referrerId String
+          refereeId  String
+            createdAt  DateTime @default(now())
+
+              referrer   User     @relation("referrer", fields: [referrerId], references: [id])
+                referee    User     @relation("referee", fields: [refereeId], references: [id])
+}
+
+// ----------------------------------------------------------
+// DEVICE SESSIONS (anonymous device fingerprint, safe)
+// ----------------------------------------------------------
+model DeviceSession {
+      id         String    @id @default(cuid())
+        userId     String?
+          deviceHash String
+            lastSeen   DateTime  @default(now())
+              ip         String?
+
+                user       User?     @relation(fields: [userId], references: [id])
+}
+
+// ----------------------------------------------------------
+// NOTIFICATIONS
+// ----------------------------------------------------------
+model Notification {
+      id        String       @id @default(cuid())
+        message   String
+          read      Boolean      @default(false)
+            userId    String
+              createdAt DateTime     @default(now())
+
+                user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ----------------------------------------------------------
+// AUDIT LOG
+// ----------------------------------------------------------
+model AuditLog {
+      id        String     @id @default(cuid())
+        userId    String?
+          action    String
+            metadata  Json?
+              createdAt DateTime @default(now())
+
+                user      User?     @relation(fields: [userId], references: [id])
+}
