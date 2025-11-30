@@ -16,23 +16,32 @@ export default function LoginPage() {
     const loginWithGoogle = async () => {
     await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: "https://wbwzahkpupphpyvqbyau.supabase.co/auth/v1/callback" },
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/redirect/supabase`
+        },
         });
           };
 // --- DISCORD LOGIN ---
 const loginWithDiscord = async () => {
 await supabase.auth.signInWithOAuth({
 provider: "discord",
-options: { redirectTo: "https://wbwzahkpupphpyvqbyau.supabase.co/auth/v1/callback" },
+redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/redirect/supabase`
+    },
     });
       };
 // --- EMAIL OTP ---
 const sendOtp = async () => {
-if (!email) return alert("Enter a valid email");
-const { error } = await supabase.auth.signInWithOtp({ email });
-if (error) alert(error.message);
-else alert("OTP sent! Check your email.");
-  };
+  if (!email) return alert("Enter a valid email");
+
+  const { error } = await supabase.auth.signInWithOtp({
+  email,
+  options: {
+redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/redirect/supabase`
+    },
+      });
+
+      if (error) alert(error.message);
+      else alert("OTP sent! Check your email.");
+      };
 return (
     <main className="relative min-h-screen w-full bg-black flex items-center justify-center">
     {/* Slight blue hologram background */}
