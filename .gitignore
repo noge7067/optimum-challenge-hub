@@ -18,3 +18,4 @@ yarn-error.log*
 pnpm-debug.log*.env
 client/.env
 server/.env
+.env
