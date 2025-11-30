@@ -422,3 +422,22 @@ html, body {
         color: #f0f;
           transform: translate(-2px, 2px);
           }
+.force-green {
+    background-color: green !important;
+    }
+    .force-green:hover {
+      background-color: darkgreen !important;
+      }
+@keyframes colorWave {
+    0%   { color: #ff0000; }  /* red */
+   16%  { color: #ff7f00; }  /* orange */
+   32%  { color: #ffff00; }  /* yellow */
+   48%  { color: #00ff00; }  /* green */
+   64%  { color: #0000ff; }  /* blue */
+   80%  { color: #4b0082; }  /* indigo */
+   100% { color: #8b00ff; }  /* violet */
+                }
+
+    .text-color-wave {
+    animation: colorWave 10s linear infinite;
+       }
