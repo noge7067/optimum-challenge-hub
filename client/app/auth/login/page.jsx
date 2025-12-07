@@ -12,22 +12,24 @@ import { FiMail } from "react-icons/fi";
 export default function LoginPage() {
     const [email, setEmail] = useState("");
 
-    // --- GOOGLE LOGIN ---
-    const loginWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({
-    provider: "google",
-    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/redirect/supabase`
-        },
-        });
-          };
+// --- GOOGLE LOGIN ---
+const loginWithGoogle = async () => {
+  await supabase.auth.signInWithOAuth({
+      provider: "google",
+          options: {
+                redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/redirect/supabase`,
+                    },
+                      });
+                      };
 // --- DISCORD LOGIN ---
 const loginWithDiscord = async () => {
-await supabase.auth.signInWithOAuth({
-provider: "discord",
-redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/redirect/supabase`
-    },
-    });
-      };
+  await supabase.auth.signInWithOAuth({
+      provider: "discord",
+          options: {
+                redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/redirect/supabase`,
+                    },
+                      });
+                      };
 // --- EMAIL OTP ---
 const sendOtp = async () => {
   if (!email) return alert("Enter a valid email");
