@@ -1,8 +1,19 @@
 {
       "compilerOptions": {
-          "baseUrl": "client",
-              "paths": {
-                    "@/*": ["*"]
-                        }
-                          }
-                          }
+          "target": "ES2022",
+              "module": "NodeNext",
+                  "moduleResolution": "nodenext",
+                      "esModuleInterop": true,
+                          "allowSyntheticDefaultImports": true,
+                              "strict": true,
+                                  "forceConsistentCasingInFileNames": true,
+                                      "baseUrl": "client",
+                                          "paths": {
+                                                "@/*": ["*"]
+                                                    },
+                                                        "resolveJsonModule": true,
+                                                            "skipLibCheck": true,
+                                                                "types": ["node", "react"]
+                                                                  },
+                                                                    "include": ["client", "server", "prisma.config.ts"]
+                                                                    }

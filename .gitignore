@@ -19,3 +19,7 @@ pnpm-debug.log*.env
 client/.env
 server/.env
 .env
+
+/generated/prisma
+
+/generated/prisma
