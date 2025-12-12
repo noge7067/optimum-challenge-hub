@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // Example DB client
+import prisma from "../../lib/prisma";  // <-- THIS is correct// Example DB client
 import { setCookie } from "cookies-next"; // Optional, for session
 
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;

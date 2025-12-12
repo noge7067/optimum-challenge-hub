@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // Example DB client
+import prisma from "@lib/prisma";     // Example DB client
 import { setCookie } from "cookies-next";
 
 const OTP_STORE = {}; // In-memory store. For production, move to DB or Redis

@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+    "target": "ES2022",                  // Modern JS output
+    "module": "NodeNext",                // Node ESM support
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,             // Support CJS imports
+    "allowSyntheticDefaultImports": true,
+    "strict": true,                      // Full TS strict mode
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,                // Speed up build, ignore lib type issues
+    "resolveJsonModule": true,
+    "baseUrl": ".",                    // <- Add this
+    "paths": {                         // <- Add this
+    "@lib/*": ["client/lib/*"]
+             }
+                     },
+    "include": ["client", "server", "prisma.ts", "prisma.config.ts" , "test-prisma.ts"]
+                     }

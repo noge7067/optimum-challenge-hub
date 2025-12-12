@@ -4,6 +4,7 @@
               "module": "NodeNext",
                   "moduleResolution": "nodenext",
                       "esModuleInterop": true,
+                        "allowImportingTsExtensions": true,
                           "allowSyntheticDefaultImports": true,
                               "strict": true,
                                   "forceConsistentCasingInFileNames": true,

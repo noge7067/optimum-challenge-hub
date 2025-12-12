@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+  "target": "ES2022",
+  "module": "NodeNext",
+  "moduleResolution": "nodenext",
+  "allowImportingTsExtensions": true,
+  "esModuleInterop": true,
+  "allowJs": true,
+  "strict": true,
+  "forceConsistentCasingInFileNames": true,
+  "noEmit": true,
+  "skipLibCheck": true,
+  "resolveJsonModule": true,
+  "rootDir": ".",
+  "outDir": "dist",
+  "isolatedModules": true,
+  "noImplicitAny": true,
+  "noImplicitReturns": true,
+  "noFallthroughCasesInSwitch": true,
+  "strictNullChecks": true,
+      
+      // ✅ Add baseUrl and path alias for Prisma client
+      "baseUrl": "./server",
+      "paths": {
+      "@/*": ["./*"],
+      "@prisma/*": ["generated/prisma/client/*"]
+       }
+        },
+        "include": ["**/*.ts", "**/*.js"],
+        "exclude": ["node_modules", "dist"]
+        }
