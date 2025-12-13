@@ -41,6 +41,7 @@
     "@types/node": "^20.19.25",
     "@types/react": "^19.2.7",
     "autoprefixer": "^10.4.22",
+    "baseline-browser-mapping": "^2.9.7",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",

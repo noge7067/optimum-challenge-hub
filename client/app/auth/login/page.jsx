@@ -14,20 +14,20 @@ export default function LoginPage() {
 
 // --- GOOGLE LOGIN ---
 const loginWithGoogle = async () => {
- await supabase.auth.signInWithOAuth({
-    provider: 'google',
+await supabase.auth.signInWithOAuth({
+    provider: "google",
       options: {
-          redirectTo: 'https://silver-broccoli-97rqrppw4g6q2xq6j.github.dev/profile-setup'
+          redirectTo: "https://silver-broccoli-97rqrppw4g6q2xq6j-3000.app.github.dev/auth/redirect",
             },
             });
           };
 // --- DISCORD LOGIN ---
 const loginWithDiscord = async () => {
- await supabase.auth.signInWithOAuth({
-    provider: 'discord',
+await supabase.auth.signInWithOAuth({
+    provider: "discord",
       options: {
-          redirectTo: 'https://silver-broccoli-97rqrppw4g6q2xq6j.github.dev/profile-setup'
-            }, 
+          redirectTo: "https://silver-broccoli-97rqrppw4g6q2xq6j-3000.app.github.dev/auth/redirect",
+            },
             });
             };
 // --- EMAIL OTP ---
@@ -35,12 +35,12 @@ const sendOtp = async () => {
   if (!email) return alert("Enter a valid email");
 
   const { error } =
- await supabase.auth.signInWithOtp({
-    email,
-      options: {
-          emailRedirectTo: "https://silver-broccoli-97rqrppw4g6q2xq6j.github.dev/profile-setup"
-            },
-            });
+  await supabase.auth.signInWithOtp({
+      email,
+        options: {
+            emailRedirectTo: "https://silver-broccoli-97rqrppw4g6q2xq6j-3000.app.github.dev/auth/redirect",
+              },
+              });
 
       if (error) alert(error.message);
       else alert("OTP sent! Check your email.");
